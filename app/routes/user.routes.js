@@ -9,10 +9,10 @@ module.exports = (app) => {
     // app.get('/user', user.findAll);
 
     // Retrieve a User with userId
-    app.get('/notes/:noteId', user.findOne);
+    app.get('/user/:id', user.findOne);
 
     // Update a User with userId
-    app.put('/note/:noteId', user.update);
+    app.put('/user/:id', user.update);
 
     // Delete a User with userId
     //TODO неуверен в необходимости этого метода или передать его только администратору

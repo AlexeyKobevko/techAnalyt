@@ -46,21 +46,22 @@ const verifyToken = (req, res, next) => {
     }
 };
 
-app.post('/auth', (req, res) => {
-    const { email, password } = req.body;
-
-    if (email === 'admin@admin.com' && password === 'admin') {
-        const token = jwt.sign({ login: 'this' }, 'secret');
-        res.json({ token });
-    }   else {
-        res.status(401).json({
-            status: 'error',
-            message: 'Неверные логин или пароль'
-        })
-    }
-});
+// app.post('/auth', (req, res) => {
+//     const { email, password } = req.body;
+//
+//     if (email === 'admin@admin.com' && password === 'admin') {
+//         const token = jwt.sign({ login: 'this' }, 'secret');
+//         res.json({ token });
+//     }   else {
+//         res.status(401).json({
+//             status: 'error',
+//             message: 'Неверные логин или пароль'
+//         })
+//     }
+// });
 
 require('./app/routes/user.routes')(app);
+require('./app/routes/auth.routes')(app);
 
 const PORT = process.env.PORT || 8888;
 

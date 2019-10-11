@@ -1,19 +1,11 @@
 const User = require('../models/user.model');
 const jwt = require('jsonwebtoken');
+const bcrypt = require('bcryptjs');
 
 // Create and Save a new User
 exports.create = async (req, res) => {
-
-    const foundUser = await User.findOne ({ "email" : req.body.email });
-
-    if (foundUser) {
-        console.log(foundUser);
-        return res.status(400).json({
-            status: "error",
-            message: "Пользовотель с таким email уже существует",
-            fu: foundUser
-        });
-    }
+    //Find user with same email
+    const foundUser = await User.findOne ({ email : req.body.email });
     // Validate request
     if (!req.body.firstName) {
         return res.status(400).json({
@@ -45,143 +37,96 @@ exports.create = async (req, res) => {
             message: "Поле организация обязательно для заполнения"
         });
     }
-    // Create a User
-    //TODO в ближайшей итерации хешировать пароль и хранить его хеш с солью
-    const user = new User({
-        firstName: req.body.firstName,
-        lastName: req.body.lastName,
-        email: req.body.email,
-        password: req.body.password,
-        organization: req.body.organization,
+    if (foundUser) {
+        return res.status(400).json({
+            status: "error",
+            message: "Пользовотель с таким email уже существует",
+        });
+    }
+    //Generate hash from password
+    await bcrypt.genSalt(10, (err, salt) => {
+        bcrypt.hash(req.body.password, salt, (err, hash) => {
+            if (!err) {
+                // Create a User
+                const user = new User({
+                    firstName: req.body.firstName,
+                    lastName: req.body.lastName,
+                    email: req.body.email,
+                    password: hash,
+                    organization: req.body.organization,
+                });
+                // Save User in the database
+                user.save()
+                    .then(data => {
+                        const token = jwt.sign({ email: data.email }, process.env.SECRET);
+                        res.json({
+                            status: "ok",
+                            message: {
+                                id: data._id,
+                                token: token,
+                            }
+                        });
+                    }).catch(err => {
+                    res.status(500).json({
+                        status: "error",
+                        message: err.message || "Some error occurred while creating the User."
+                    });
+                });
+
+            } else {
+                res.status(500).json({
+                    status: "error",
+                    message: err.message || "Some error occurred while creating the User."
+                });
+            }
+        });
     });
-    // Save User in the database
-    user.save()
-        .then(data => {
-            const token = jwt.sign({ email: data.email }, process.env.SECRET);
+};
+// Find a single user with a userId
+exports.findOne = (req, res) => {
+    User.findById(req.params.id)
+        .then(user => {
+            if (!user) {
+                return res.status(404).json({
+                    status: "error",
+                    message: "Не найден пользователь с id " + req.params.id
+                });
+            }
             res.json({
                 status: "ok",
                 message: {
-                    id: data._id,
-                    token: token
+                    firstName: user.firstName,
+                    lastName: req.body.lastName,
+                    email: req.body.email,
+                    organization: req.body.organization,
                 }
             });
         }).catch(err => {
-        res.status(500).send({
-            status: "error",
-            message: err.message || "Some error occurred while creating the User."
-        });
-    });
-
-};
-
-// Retrieve and return all notes from the database.
-exports.findAll = (req, res) => {
-    Note.find()
-        .then(notes => {
-            res.send({
-                status: "ok",
-                message: notes
-            });
-        }).catch(err => {
-        res.status(500).send({
-            status: "error",
-            message: err.message || "Some error occurred while retrieving notes."
-        });
-    });
-};
-
-// Find a single note with a noteId
-exports.findOne = (req, res) => {
-    Note.findById(req.params.noteId)
-        .then(note => {
-            if (!note) {
-                return res.status(404).send({
-                    status: "error",
-                    message: "Note not found with id " + req.params.noteId
-                });
-            }
-            res.send({
-                status: "ok",
-                message: note
-            });
-        }).catch(err => {
         if (err.kind === 'ObjectId') {
-            return res.status(404).send({
+            return res.status(404).json({
                 status: "error",
-                message: "Note not found with id " + req.params.noteId
+                message: "Не найден пользователь с id " + req.params.id
             });
         }
-        return res.status(500).send({
+        return res.status(500).json({
             status: "error",
-            message: "Error retrieving note with id " + req.params.noteId
+            message: "Ошибка при получении пользователя с id " + req.params.noteId
         });
     });
 };
 
-// Update a note identified by the noteId in the request
+// Update a user identified by the userId in the request
 exports.update = (req, res) => {
-    // Validate Request
-    if (!req.body.content) {
-        return res.status(400).send({
-            status: "error",
-            message: "Note content can not be empty"
-        });
-    }
-
-    // Find note and update it with the request body
-    Note.findByIdAndUpdate(req.params.noteId, {
-        title: req.body.title || "Untitled Note",
-        content: req.body.content
-    }, {new: true})
-        .then(note => {
-            if (!note) {
-                return res.status(404).send({
-                    status: "error",
-                    message: "Note not found with id " + req.params.noteId
-                });
-            }
-            res.send({
-                status: "ok",
-                message: note
-            });
-        }).catch(err => {
-        if (err.kind === 'ObjectId') {
-            return res.status(404).send({
-                status: "error",
-                message: "Note not found with id " + req.params.noteId
-            });
-        }
-        return res.status(500).send({
-            status: "error",
-            message: "Error updating note with id " + req.params.noteId
-        });
+    res.status(500).json({
+        status: "error",
+        message: "Метод в разработке"
     });
 };
 
-// Delete a note with the specified noteId in the request
+// Delete a user with the specified userId in the request
 exports.delete = (req, res) => {
-    Note.findByIdAndRemove(req.params.noteId)
-        .then(note => {
-            if(!note) {
-                return res.status(404).send({
-                    status: "error",
-                    message: "Note not found with id " + req.params.noteId
-                });
-            }
-            res.send({
-                status: "ok",
-                message: "Note deleted successfully!"
-            });
-        }).catch(err => {
-        if(err.kind === 'ObjectId' || err.name === 'NotFound') {
-            return res.status(404).send({
-                status: "error",
-                message: "Note not found with id " + req.params.noteId
-            });
-        }
-        return res.status(500).send({
-            status: "error",
-            message: "Could not delete note with id " + req.params.noteId
-        });
+    res.status(500).json({
+        status: "error",
+        message: "Метод в разработке"
     });
 };
