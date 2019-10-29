@@ -71,8 +71,8 @@ exports.create = async (req, res) => {
                 user.save()
                     .then(data => {
                         const randomNumber = Math.floor((Math.random() * 100) + 54);
-                        // const url = `https://arcane-eyrie-30150.herokuapp.com/?id=${data._id}&rand=${randomNumber}`;
-                        const url = `http://localhost:8888/?id=${data._id}&rand=${randomNumber}`;
+                        const url = `https://arcane-eyrie-30150.herokuapp.com/?id=${data._id}&rand=${randomNumber}`;
+                        // const url = `http://localhost:8888/?id=${data._id}&rand=${randomNumber}`;
                         const mailOptions = {
                             from: `Technical|Analytics <${process.env.MAIL_NAME}@${process.env.MAIL_HOST}>`,
                             to: data.email,
@@ -97,15 +97,6 @@ exports.create = async (req, res) => {
                                     })
                             }
                         });
-
-                        // const token = jwt.sign({ email: data.email }, process.env.SECRET);
-                        // res.json({
-                        //     status: "ok",
-                        //     message: {
-                        //         // id: data._id,
-                        //         // token: token,
-                        //     }
-                        // });
                     }).catch(err => {
                     res.status(500).json({
                         status: "error",
