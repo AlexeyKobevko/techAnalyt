@@ -3,31 +3,42 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 
 exports.auth = async (req, response) => {
-    const { email, password } = req.body;
-    const user = await User.findOne({ email: email });
 
-    if (!user) {
-        response.status(500).json({
-            status: "error",
-            message: "Пользователь не найден"
-        })
-    }
+    try {
+        const { email, password } = req.body;
+        const user = await User.findOne({ email: email });
 
-    const match = await bcrypt.compare(password, user.password);
+        if (!user) {
+            return response.status(500).json({
+                status: "error",
+                message: "Пользователь не найден",
+            });
+        }
+        if (user && !user.isActive) {
+            return response.status(401).json({
+                status: "error",
+                message: "Email пользователя не подтвержден",
+            });
+        }
 
-    if (!match) {
-        response.status(401).json({
-            status: "error",
-            message: "Пароли не совпадают"
-        });
-    } else {
-        const token = jwt.sign({ login: user.email }, process.env.SECRET);
-        response.status(200).json({
-            status: "ok",
-            message: {
-                id: user._id,
-                token: token
-            }
-        })
+        const match = await bcrypt.compare(password, user.password);
+
+        if (!match) {
+            response.status(401).json({
+                status: "error",
+                message: "Неверный пароль"
+            });
+        } else {
+            const token = jwt.sign({ login: user.email }, process.env.SECRET);
+            response.status(200).json({
+                status: "ok",
+                message: {
+                    id: user._id,
+                    token: token
+                }
+            })
+        }
+    } catch (e) {
+        throw new Error(e);
     }
 };

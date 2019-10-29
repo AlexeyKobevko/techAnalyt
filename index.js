@@ -4,6 +4,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const jwt = require('jsonwebtoken');
+const bodyParser = require('body-parser');
 
 mongoose.set('useNewUrlParser', true);
 mongoose.set('useFindAndModify', false);
@@ -19,9 +20,13 @@ mongoose.connect(`mongodb://${process.env.DB_USER}:${process.env.DB_PASS}@${proc
 });
 
 const app = express();
+// parse application/x-www-form-urlencoded
+app.use(bodyParser.urlencoded({ extended: false }));
+// parse application/json
+app.use(bodyParser.json());
 
-app.use(express.json());
 app.use(cors());
+app.options('*', cors());
 
 // const User = require('./models/User');
 
@@ -62,6 +67,7 @@ const verifyToken = (req, res, next) => {
 
 require('./app/routes/user.routes')(app);
 require('./app/routes/auth.routes')(app);
+require('./app/routes/verify.routes')(app);
 
 const PORT = process.env.PORT || 8888;
 
