@@ -71,8 +71,7 @@ exports.create = async (req, res) => {
                 user.save()
                     .then(data => {
                         const randomNumber = Math.floor((Math.random() * 100) + 54);
-                        const url = `https://arcane-eyrie-30150.herokuapp.com/?id=${data._id}&rand=${randomNumber}`;
-                        // const url = `http://localhost:8888/?id=${data._id}&rand=${randomNumber}`;
+                        const url = `https://arcane-eyrie-30150.herokuapp.com/verify?id=${data._id}&rand=${randomNumber}`;
                         const mailOptions = {
                             from: `Technical|Analytics <${process.env.MAIL_NAME}@${process.env.MAIL_HOST}>`,
                             to: data.email,
