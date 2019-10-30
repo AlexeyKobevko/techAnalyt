@@ -3,46 +3,36 @@
   margin: 0;
   padding: 0;
 }
-
+body {
+  font-family: Open Sans, sans-serif;
+  font-style: normal;
+  background: linear-gradient(rgba(37, 37, 41, 0.8), rgba(37, 37, 41, 0.8));
+}
 a {
   text-decoration: none;
   color: #FFFFFF !important;
 }
-
 .wrap {
-  position: absolute;
-  display: flex;
-  flex-wrap: wrap;
-  width: 100%;
-  height: 100%;
-  flex-direction: column;
-  justify-content: flex-start;
+  max-width: 1440px;
+  margin: 0 auto;
 }
-
 .header {
   width: 100%;
-  height: 7%;
-  left: 0;
-  top: 0;
+  height: 60px;
   background: #1A1A1B;
   display: flex;
-  flex-direction: row;
 }
-
 .left-side {
   display: flex;
   width: 70%;
-  height: 4rem;
   align-items: center;
   justify-content: flex-start;
   padding-left: 60px;
 }
-
 .logo {
   position: absolute;
   display: flex;
 }
-
 .right-side {
   display: flex;
   width: 30%;
@@ -51,16 +41,12 @@ a {
   justify-content: space-evenly;
   flex-direction: row;
 }
-
 .contacts {
   display: flex;
-  font-family: Open Sans, sans-serif;
-  font-style: normal;
   font-weight: 600;
   font-size: 14px;
   line-height: 20px;
 }
-
 .enter {
   display: flex;
   font-family: Open Sans, sans-serif;
@@ -69,22 +55,24 @@ a {
   font-size: 14px;
   line-height: 20px;
 }
-
 .main {
   width: 100%;
-  height: 93%;
+  height: calc(100vh - 60px);
   display: flex;
   box-sizing: border-box;
-  background: linear-gradient(rgba(37, 37, 41, 0.8), rgba(37, 37, 41, 0.8)), url('../public/images/BG.webp') no-repeat center center;
+  background-image: url(/public/images/BG.webp);
   background-size: cover;
   justify-content: center;
   align-items: center;
+  background-position: center center;
+  background-repeat: no-repeat;
 }
 
 .server-response-form {
   display: flex;
-  width: 700px;
+  max-width: 100%;
   height: 400px;
+  padding: 0 2rem;
   background: #252529;
   border-radius: 14px;
   justify-content: center;
@@ -94,13 +82,10 @@ a {
 
 .text {
   display: flex;
-  width: 600px;
-  height: 300px;
-  font-family: Open Sans, sans-serif;
-  font-style: normal;
   font-weight: 600;
   font-size: 14px;
   line-height: 20px;
   color: #FFFFFF;
   align-items: center;
+  justify-content: center;
 }
