@@ -70,6 +70,7 @@ a {
 
 .server-response-form {
   display: flex;
+  flex-direction: column;
   max-width: 100%;
   height: 400px;
   padding: 0 2rem;

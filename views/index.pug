@@ -19,6 +19,7 @@ html
                 .right-side
             div.main
                 div.server-response-form
-                    div.text= text
                     if authorised
-                        a(href='https://techanalytics.000webhostapp.com/login') Перейти к приложению
+                        div.text-header= header
+                        div.text= text
+                        a(href='https://techanalytics.000webhostapp.com/') Перейти к приложению
