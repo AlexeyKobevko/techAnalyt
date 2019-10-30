@@ -75,7 +75,7 @@ a {
   height: 93%;
   display: flex;
   box-sizing: border-box;
-  background: linear-gradient(rgba(37, 37, 41, 0.8), rgba(37, 37, 41, 0.8)), url('BG.webp') no-repeat center center;
+  background: linear-gradient(rgba(37, 37, 41, 0.8), rgba(37, 37, 41, 0.8)), url('../public/images/BG.webp') no-repeat center center;
   background-size: cover;
   justify-content: center;
   align-items: center;

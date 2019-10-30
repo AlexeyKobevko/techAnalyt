@@ -24,6 +24,8 @@ const app = express();
 app.set('views', './views');
 // the template engine to use
 app.set('view engine', 'pug');
+// set public directory for static content
+app.use("/public", express.static(path.join(__dirname, 'public')));
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }));
 // parse application/json
