@@ -26,7 +26,8 @@ exports.create = async (req, res) => {
             await desiredUser.save();
 
             await desiredVerify.remove();
-            return res.status(200).send('Email успешно подтверждён. Авторизуйтесь в приложении для начала работы');
+            return res.status(200).render('index',
+                {text: 'Email успешно подтверждён. Авторизуйтесь в приложении для начала работы'});
         }
     }
     catch (e) {

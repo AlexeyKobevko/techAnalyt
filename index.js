@@ -20,6 +20,10 @@ mongoose.connect(`mongodb://${process.env.DB_USER}:${process.env.DB_PASS}@${proc
 });
 
 const app = express();
+// set the directory where the template files
+app.set('views', './views');
+// the template engine to use
+app.set('view engine', 'pug');
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }));
 // parse application/json
