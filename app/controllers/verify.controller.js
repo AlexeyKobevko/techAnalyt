@@ -36,8 +36,9 @@ exports.create = async (req, res) => {
             await desiredVerify.remove();
             return res.status(200).render('index', {
                 authorised: true,
-                text: `Здравствйте ${desiredUser.name} <br>
-                Email успешно подтверждён. Авторизуйтесь в приложении для начала работы`,
+                header: `Здравствйте ${desiredUser.name}.`,
+                text: `Email успешно подтверждён.`,
+                link: 'Авторизуйтесь в приложении для начала работы.',
             });
         }
     }
