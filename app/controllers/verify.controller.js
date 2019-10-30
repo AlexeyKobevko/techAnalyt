@@ -9,7 +9,7 @@ exports.create = async (req, res) => {
     try {
         if (!desiredVerify || !desiredUser) {
             return res.status(452).render('index', {
-                text: `Произошла ошибка. Пользователь с id ${req.query.id} не найден`,
+                text: `Произошла ошибка. Пользователь не найден`,
             });
         }
         if (req.query.id !== desiredVerify.userId || req.query.id !== desiredUser._id.toString()) {
@@ -35,7 +35,9 @@ exports.create = async (req, res) => {
 
             await desiredVerify.remove();
             return res.status(200).render('index', {
-                text: 'Email успешно подтверждён. Авторизуйтесь в приложении для начала работы',
+                authorised: true,
+                text: `Здравствйте ${desiredUser.name} <br>
+                Email успешно подтверждён. Авторизуйтесь в приложении для начала работы`,
             });
         }
     }

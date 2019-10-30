@@ -13,10 +13,12 @@ html
                 div(class='left-side')
                     div(class='logo')
                         img(
-                        src='/images/logo.png'
+                        src='../public/images/logo.png'
                         alt='logo'
                         )
                 .right-side
             div.main
                 div.server-response-form
                     div.text= text
+                    if authorised
+                        a(href='https://techanalytics.000webhostapp.com/login') Перейти к приложению
