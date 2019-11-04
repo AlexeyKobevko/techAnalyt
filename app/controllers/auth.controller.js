@@ -33,8 +33,12 @@ exports.auth = async (req, response) => {
             response.status(200).json({
                 status: "ok",
                 message: {
-                    user: {...user},
-                    token: token
+                    id: user._id,
+                    email: user.email,
+                    name: user.name,
+                    phone: user.phone,
+                    organization: user.organization,
+                    token: token,
                 }
             })
         }
